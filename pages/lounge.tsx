@@ -79,7 +79,7 @@ export async function getServerSideProps(context: any) {
   if (balance.toNumber() < MEMBERSHIP_NFT_TOKEN_COUNT_REQ) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/?denied=true",
         permanent: false,
       },
     };

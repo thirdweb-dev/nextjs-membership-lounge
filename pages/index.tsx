@@ -80,6 +80,9 @@ const Home: NextPage = () => {
                 Attempt to Enter Private Lounge
               </Button>
             </Text>
+            {router.query.denied ? (
+              <Text color="red">Access Denied </Text>
+            ) : null}
           </>
         ) : (
           <Button onClick={() => activate(injectedConnector)}>
