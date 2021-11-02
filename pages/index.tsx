@@ -28,6 +28,7 @@ const Home: NextPage = () => {
   const enterMemberLounge = useCallback(async () => {
     if (library && account) {
       const signer = library.getSigner(account);
+      // request for nonce to prevent signature reply attack
       const reqAccess = await fetch("/api/request_access");
       const reqAccessResp = await reqAccess.json();
       const signature = await signer.signMessage(
