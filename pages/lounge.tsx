@@ -1,10 +1,11 @@
 import { ThirdwebSDK } from "@3rdweb/sdk";
-import { Center, Container, Text, Heading } from "@chakra-ui/react";
+import { Center, Container, Text, Heading, Box, Stack } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { verifyMessage } from "@ethersproject/wallet";
 import type { InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 
 // Polygon only
 const MEMBERSHIP_NFT_CONTRACT_ADDRESS =
@@ -13,9 +14,19 @@ const MEMBERSHIP_NFT_TOKEN_ID_REQ = "0";
 const MEMBERSHIP_NFT_TOKEN_COUNT_REQ = 1;
 
 const Home: NextPage = ({
+  signature,
   walletAddress,
   balance,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // remove `signature` query params on load
+    if (router.query.signature) {
+      router.replace("/lounge", undefined, { shallow: true });
+    }
+  }, [router]);
+
   return (
     <Container>
       <Head>
@@ -26,9 +37,13 @@ const Home: NextPage = ({
 
       {/*  */}
       <Center flexDirection="column">
-        <Text mb={8} fontSize="xs">
-          Fingerprint: {walletAddress} owns {balance} NFT.
-        </Text>
+        <Stack direction="row">
+          <Text fontSize="xs">Signature: {signature}</Text>
+          <Text fontSize="xs">Address: {walletAddress}</Text>
+          <Text fontSize="xs">Balance: {balance}</Text>
+        </Stack>
+
+        <Box mt={8} />
 
         <Heading>Member Only Content</Heading>
         <Text>
@@ -71,7 +86,7 @@ export async function getServerSideProps(context: any) {
   }
 
   return {
-    props: { walletAddress, balance: balance.toNumber() }, // Will be passed to the page component as props
+    props: { signature, walletAddress, balance: balance.toNumber() }, // Will be passed to the page component as props
   };
 }
 
