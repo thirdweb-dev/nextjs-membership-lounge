@@ -12,7 +12,8 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { ThirdwebSDK } from "@3rdweb/sdk";
 
 // Polygon only
 const injectedConnector = new InjectedConnector({ supportedChainIds: [137] });
@@ -26,6 +27,7 @@ const OPENSEA_LINK =
 
 const Home: NextPage = () => {
   const router = useRouter();
+  const [showMemberOnlyInfo, setShowMemberOnlyInfo] = useState(false);
   const { account, library, activate } = useWeb3React();
 
   const enterMemberLounge = useCallback(async () => {
@@ -41,6 +43,23 @@ const Home: NextPage = () => {
     }
   }, [router, library, account]);
 
+  useEffect(() => {
+    async function checkWalletMembership() {
+      const signer = library.getSigner(account);
+      const module = new ThirdwebSDK(signer).getCollectionModule(
+        MEMBERSHIP_NFT_CONTRACT_ADDRESS
+      );
+      const balance = await module.balance(MEMBERSHIP_NFT_TOKEN_ID_REQ);
+      if (balance.toNumber() >= MEMBERSHIP_NFT_TOKEN_COUNT_REQ) {
+        setShowMemberOnlyInfo(true);
+      }
+    }
+
+    if (library && account) {
+      checkWalletMembership();
+    }
+  }, [library, account]);
+
   return (
     <Container>
       <Head>
@@ -53,7 +72,9 @@ const Home: NextPage = () => {
       <Center flexDirection="column">
         <Heading>Member Only Lounge</Heading>
         <Text>
-          You need to own Membership NFT in order to get access to the website.
+          You need to own Membership NFT in order to get access to the lounge
+          webpage. If you own the Membership NFT, you are eligible to reveal
+          member-only secret information too.
         </Text>
 
         <Text mt={4} textAlign="center">
@@ -71,17 +92,13 @@ const Home: NextPage = () => {
           </Text>
         </Text>
 
-        <Link
-          mt={4}
-          href="https://opensea.io/assets/matic/0x4465ae876e5263cb4eaf42948723e28bb30c65e8/0"
-          color="blue"
-          external
-        >
+        <Link mt={4} href={OPENSEA_LINK} color="blue" external>
           View NFT on OpenSea
         </Link>
       </Center>
 
-      {/* Setup wallet connect button and enter lounge button if wallet is connected*/}
+      {/* Setup wallet connect button and enter lounge button if wallet is connected.
+          This method uses server-side to validate that the wallet has the required NFT. */}
       <Box mt={20} textAlign="center">
         {account ? (
           <>
@@ -102,6 +119,19 @@ const Home: NextPage = () => {
           </Button>
         )}
       </Box>
+
+      {/* This method uses client-side to conditionally display information based off
+          membership nft in the connected wallet */}
+      {showMemberOnlyInfo ? (
+        <Center mt={8}>
+          <Text textAlign="center">
+            Only member can see this: our private discord invite link:{" "}
+            <Link color="blue" href="https://discord.gg/thirdweb" external>
+              https://discord.gg/thirdweb
+            </Link>
+          </Text>
+        </Center>
+      ) : null}
     </Container>
   );
 };
