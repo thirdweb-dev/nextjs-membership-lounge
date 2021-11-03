@@ -109,9 +109,6 @@ const Home: NextPage = () => {
                 Attempt to Enter Private Lounge
               </Button>
             </Text>
-            {router.query.denied ? (
-              <Text color="red">Access Denied </Text>
-            ) : null}
           </>
         ) : (
           <Button onClick={() => activate(injectedConnector)}>
@@ -125,12 +122,19 @@ const Home: NextPage = () => {
       {showMemberOnlyInfo ? (
         <Center mt={8}>
           <Text textAlign="center">
-            Only member can see this: our private discord invite link:{" "}
+            Only member can see this: heres the member only private discord
+            invite link{" "}
             <Link color="blue" href="https://discord.gg/thirdweb" external>
               https://discord.gg/thirdweb
             </Link>
           </Text>
         </Center>
+      ) : null}
+
+      {router.query.denied ? (
+        <Text color="red" textAlign="center" mt={8}>
+          Access Denied{" "}
+        </Text>
       ) : null}
     </Container>
   );
