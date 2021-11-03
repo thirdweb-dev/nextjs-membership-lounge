@@ -1,1 +1,43 @@
+# nextjs-membership-lounge
 
+An example project using Next.js. The project show case how to restrict the access of your web contents to the users with your NFTs.
+
+## Pages 
+`pages/_app.tsx`
+
+Setting up `web3-react` and `chakra-ui` context providers.
+
+
+`pages/index.tsx`
+
+A simple page showing the NFT detail that is required to access to the lounge.
+
+It has a `Wallet Connect` button and only work if your Metamask wallet is connected to the `Polygon` network. 
+After connecting your wallet, you would see a button to `Attempt to Enter Private Lounge` that uses Ethereum sign message signature to authenticate and validate the ownership of the required NFT. 
+
+If you have the required NFT in your wallet, you would also see a section of private content in the page. (private discord link 😏) 
+
+
+`pages/lounge.tsx`
+
+Restricted membership lounge page that is only accessible to wallet with specified NFT. This uses server-side authentication and validation.
+
+To access the lounge page, you are required to pass in `signature` in the query params signed that you want to access the lounge along with a one-time use code.
+
+If the signed wallet have the required NFT, then it would render the page with watermarks (signature and wallet info). Otherwise, it'd redirects the user back to `/index.tsx`. 
+
+
+`api/request_access.ts`
+
+Generate a one-time use code for the website for wallet authentication for lounge access.
+
+### Important Note
+Make sure the `nonce` is actually only used once and has expiration to prevent attack. 
+
+
+### Example Project Dependencies
+- **Next.js**: React Framework.
+- **ethers**: For low-level web3 interactions.
+- **@3rdweb/sdk**: thirdweb sdk to interact with contracts easily.
+- **@web3-react/core**, **@web3-react/injected-connector**: For web3 in React and Wallet Connect.
+- **@chakra-ui/react**: For UI.
