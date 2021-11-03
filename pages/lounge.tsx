@@ -68,7 +68,7 @@ export async function getServerSideProps(context: any) {
   // TODO: get the nonce from the previous GET /request_access request.
   // this nonce number should only be used once and has expiration.
   const expectedNonce = 42;
-  const expectedSignMessage = `I want to enter the lounge. nonce: ${expectedNonce}`;
+  const expectedSignMessage = `I want to enter the lounge. one-time access code: ${expectedNonce}`;
 
   const walletAddress = verifyMessage(expectedSignMessage, signature);
   const balance = await module.balanceOf(

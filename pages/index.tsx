@@ -5,6 +5,7 @@ import {
   Text,
   Heading,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
@@ -20,6 +21,8 @@ const MEMBERSHIP_NFT_CONTRACT_ADDRESS =
   "0x4465aE876e5263cB4Eaf42948723E28bB30C65E8";
 const MEMBERSHIP_NFT_TOKEN_ID_REQ = "0";
 const MEMBERSHIP_NFT_TOKEN_COUNT_REQ = 1;
+const OPENSEA_LINK =
+  "https://opensea.io/assets/matic/0x4465ae876e5263cb4eaf42948723e28bb30c65e8/0";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -32,7 +35,7 @@ const Home: NextPage = () => {
       const reqAccess = await fetch("/api/request_access");
       const reqAccessResp = await reqAccess.json();
       const signature = await signer.signMessage(
-        `I want to enter the lounge. nonce: ${reqAccessResp.nonce}`
+        `I want to enter the lounge. one-time access code: ${reqAccessResp.nonce}`
       );
       router.push(`/lounge?signature=${signature}`);
     }
@@ -67,9 +70,18 @@ const Home: NextPage = () => {
             {MEMBERSHIP_NFT_CONTRACT_ADDRESS}{" "}
           </Text>
         </Text>
+
+        <Link
+          mt={4}
+          href="https://opensea.io/assets/matic/0x4465ae876e5263cb4eaf42948723e28bb30c65e8/0"
+          color="blue"
+          external
+        >
+          View NFT on OpenSea
+        </Link>
       </Center>
 
-      {/* Setup wallet connect button */}
+      {/* Setup wallet connect button and enter lounge button if wallet is connected*/}
       <Box mt={20} textAlign="center">
         {account ? (
           <>
