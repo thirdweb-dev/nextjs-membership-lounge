@@ -2,13 +2,13 @@
 
 An example project using Next.js. The project show case how to restrict the access of your web contents to the users with your NFTs.
 
-## Pages 
-`pages/_app.tsx`
+## Pages Walkthrough
+**1. `pages/_app.tsx`**
 
 Setting up `web3-react` and `chakra-ui` context providers.
 
 
-`pages/index.tsx`
+**2. `pages/index.tsx`**
 
 A simple page showing the NFT detail that is required to access to the lounge.
 
@@ -18,7 +18,7 @@ After connecting your wallet, you would see a button to `Attempt to Enter Privat
 If you have the required NFT in your wallet, you would also see a section of private content in the page. (private discord link 😏) 
 
 
-`pages/lounge.tsx`
+**3. `pages/lounge.tsx`**
 
 Restricted membership lounge page that is only accessible to wallet with specified NFT. This uses server-side authentication and validation.
 
@@ -27,7 +27,7 @@ To access the lounge page, you are required to pass in `signature` in the query 
 If the signed wallet have the required NFT, then it would render the page with watermarks (signature and wallet info). Otherwise, it'd redirects the user back to `/index.tsx`. 
 
 
-`api/request_access.ts`
+**4. `pages/api/request_access.ts`**
 
 Generate a one-time use code for the website for wallet authentication for lounge access.
 
