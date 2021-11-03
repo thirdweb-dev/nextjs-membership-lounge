@@ -2,6 +2,15 @@
 
 An example project using Next.js. The project show case how to restrict the access of your web contents to the users with your NFTs.
 
+This project demonstrated how you could validate if a wallet own a specific NFT on the client-side and the server-side using our SDK.
+
+
+**NFT Ownership Validation**
+
+To validate NFT ownership on the **server-side**, the client would have the sign a message using their private key to the server.
+
+For **client-side** validation, you could verify the ownership on the blockchain directly using the connected wallet.
+
 ## Pages Walkthrough
 **1. `pages/_app.tsx`**
 
